@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kategorien</title>
+<style>
+body { font-family: Arial, sans-serif; font-size: 14px; margin: 0; padding: 0; background: #000; color: #fff; min-height: 100vh; position: relative; overflow-x: hidden; }
+#stars-canvas, #shooting-stars { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+.category-bar { padding: 15px; text-align: center; display: flex; flex-wrap: wrap; justify-content: space-between; }
+.category { color: #ffaa33; margin: 10px; cursor: pointer; position: relative; user-select: none; padding: 5px 0; width: 22%; text-align: center; transition: background-color 0.3s ease, color 0.3s ease; }
+.category:hover { background-color: #cc6600; color: #000; }
+.subcategory { display: none; position: absolute; background: #000; color: #fff; padding: 10px; border-radius: 4px; min-width: 160px; z-index: 100; top: 40px; left: 50%; transform: translateX(-50%); max-height: 200px; overflow-y: auto; }
+.subcategory.show { display: block; }
+.subcategory div { padding: 10px 0; cursor: pointer; font-size: 16px; }
+.subcategory div:hover { background-color: #cc6600; color: #000; }
+.has-sub a { color: #ffaa33; text-decoration: none; }
+.has-sub a:hover { background-color: #cc6600; color: #000; }
+@media (min-width: 600px) { .category:hover .subcategory { display: block; } }
+@media (max-width: 599px) { .category-bar { flex-direction: column; align-items: center; padding: 10px; } .category { width: 90%; margin: 6px 0; font-size: 16px; } .subcategory { position: relative; top: 0; left:0; transform:none; width:100%; } }
+.category-image { text-align: center; margin: 20px 0; }
+.category-image video { max-width: 100%; height: auto; border-radius: 8px; }
+.hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<canvas id="stars-canvas"></canvas>
+<canvas id="shooting-stars"></canvas>
+
+<div class="category-bar">
+    <div class="category"> Gaming / Computer ▼
+        <div class="subcategory">
+            <div class="has-sub"><a href="https://sites.google.com/view/sunnysschaetze/gaming-computer/videospiele" target="_blank">Videospiele</a></div>
+            <div class="has-sub"><a href="https://sites.google.com/view/sunnysschaetze/gaming-computer/konsolen" target="_blank">Konsolen</a></div>
+            <div class="has-sub"><a href="https://sites.google.com/view/sunnysschaetze/gaming-computer/handhelds" target="_blank">Handhelds</a></div>
+            <div class="has-sub hidden"><a href="https://sites.google.com/view/sunnysschaetze/gaming-computer/pcs-laptops" target="_blank">PCs & Laptops</a></div>
+            <div class="has-sub hidden"><a href="https://sites.google.com/view/sunnysschaetze/gaming-computer/telekommunikationsger%C3%A4te" target="_blank">Telekommunikationsgeräte</a></div>
+        </div>
+    </div>
+    <div class="category"> Gesellschaftsspiele / Strategiespiele ▼
+        <div class="subcategory">
+            <div class="has-sub hidden"><a href="https://sites.google.com/view/sunnysschaetze/gesellschaftsspiele-strategiespiele/w%C3%BCrfelspiele-w%C3%BCrfel" target="_blank">Würfelspiele & Würfel</a></div>
+            <div class="has-sub"><a href="https://sites.google.com/view/sunnysschaetze/gesellschaftsspiele-strategiespiele/kartenspiele-brettspiele" target="_blank">Kartenspiele & Brettspiele</a></div>
+            <div class="has-sub hidden"><a href="https://sites.google.com/view/sunnysschaetze/gesellschaftsspiele-strategiespiele/tabletop-miniaturen" target="_blank">Tabletop & Miniaturen</a></div>
+            <div class="has-sub hidden"><a href="https://sites.google.com/view/sunnysschaetze/gesellschaftsspiele-strategiespiele/puzzle-legespiele" target="_blank">Puzzle & Legespiele</a></div>
+        </div>
+    </div>
+    <div class="category"> TCG / CCG / LCG / Sticker ▼
+        <div class="subcategory">
+            <div class="has-sub"><a href="https://sites.google.com/view/sunnysschaetze/tcg-ccg-lcg-sticker/trading-card-games" target="_blank">Trading Card Games</a></div>
+            <div class="has-sub hidden"><a href="https://sites.google.com/view/sunnysschaetze/tcg-ccg-lcg-sticker/collectable-card-games" target="_blank">Collectable Card Games</a></div>
+            <div class="has-sub hidden"><a href="https://sites.google.com/view/sunnysschaetze/tcg-ccg-lcg-sticker/living-card-games" target="_blank">Living Card Games</a></div>
+            <div class="has-sub hidden"><a href="https://sites.google.com/view/sunnysschaetze/tcg-ccg-lcg-sticker/sticker" target="_blank">Sticker</a></div>
+        </div>
+    </div>
+    <div class="category"> Spielwaren / Figuren ▼
+        <div class="subcategory">
+            <div class="has-sub hidden"><a href="https://sites.google.com/view/sunnysschaetze/spielwaren-figuren/spielfiguren-actionfiguren" target="_blank">Spielfiguren & Actionfiguren</a></div>
+            <div class="has-sub"><a href="https://sites.google.com/view/sunnysschaetze/spielwaren-figuren/elektronisches-spielzeug-figuren-sammlerst%C3%BCcke" target="_blank">Elektronisches Spielzeug, Figuren & Sammlerstücke</a></div>
+            <div class="has-sub"><a href="https://sites.google.com/view/sunnysschaetze/spielwaren-figuren/pl%C3%BCsch-stofftiere" target="_blank">Plüsch & Stofftiere</a></div>
+            <div class="has-sub hidden"><a href="https://sites.google.com/view/sunnysschaetze/spielwaren-figuren/klemmbausteine" target="_blank">Klemmbausteine</a></div>
+            <div class="has-sub"><a href="https://sites.google.com/view/sunnysschaetze/spielwaren-figuren/schl%C3%BCsselanh%C3%A4nger-handyanh%C3%A4nger" target="_blank">Schlüsselanhänger & Handyanhänger</a></div>
+        </div>
+    </div>
+</div>
+
+<div class="category-bar">
+    <div class="category"> Druckschriften ▼
+        <div class="subcategory">
+            <div class="has-sub hidden"><a href="https://sites.google.com/view/sunnysschaetze/druckschriften/zeitschriften" target="_blank">Zeitschriften</a></div>
+            <div class="has-sub"><a href="https://sites.google.com/view/sunnysschaetze/druckschriften/mangas" target="_blank">Mangas</a></div>
+            <div class="has-sub hidden"><a href="https://sites.google.com/view/sunnysschaetze/druckschriften/comics" target="_blank">Comics</a></div>
+            <div class="has-sub"><a href="https://sites.google.com/view/sunnysschaetze/druckschriften/b%C3%BCcher" target="_blank">Bücher</a></div>
+        </div>
+    </div>
+    <div class="category"> Visuelle Medien ▼
+        <div class="subcategory">
+            <div class="has-sub hidden"><a href="https://sites.google.com/view/sunnysschaetze/visuelle-medien/fernseher-mediaplayer" target="_blank">Fernseher & Mediaplayer</a></div>
+            <div class="has-sub hidden"><a href="https://sites.google.com/view/sunnysschaetze/visuelle-medien/animes" target="_blank">Animes</a></div>
+            <div class="has-sub hidden"><a href="https://sites.google.com/view/sunnysschaetze/visuelle-medien/vhs" target="_blank">VHS</a></div>
+            <div class="has-sub"><a href="https://sites.google.com/view/sunnysschaetze/visuelle-medien/dvds" target="_blank">DVDs</a></div>
+            <div class="has-sub hidden"><a href="https://sites.google.com/view/sunnysschaetze/visuelle-medien/blue-rays" target="_blank">Blu-rays</a></div>
+        </div>
+    </div>
+    <div class="category"> Musik ▼
+        <div class="subcategory">
+            <div class="has-sub hidden"><a href="https://sites.google.com/view/sunnysschaetze/musik/audioger%C3%A4te" target="_blank">Audiogeräte</a></div>
+            <div class="has-sub"><a href="https://sites.google.com/view/sunnysschaetze/musik/cds" target="_blank">CDs</a></div>
+            <div class="has-sub hidden"><a href="https://sites.google.com/view/sunnysschaetze/musik/kassetten" target="_blank">Kassetten</a></div>
+        </div>
+    </div>
+    <div class="category"> Kunst / Sammlergegenstände ▼
+        <div class="subcategory">
+            <div class="has-sub"><a href="https://sites.google.com/view/sunnysschaetze/kunst-sammlergegenst%C3%A4nde/merch-fanartikel" target="_blank">Merch & Fanartikel</a></div>
+            <div class="has-sub hidden"><a href="https://sites.google.com/view/sunnysschaetze/kunst-sammlergegenst%C3%A4nde/m%C3%BCnzen-geldscheine" target="_blank">Münzen & Geldscheine</a></div>
+            <div class="has-sub hidden"><a href="https://sites.google.com/view/sunnysschaetze/kunst-sammlergegenst%C3%A4nde/ketten-medaillons" target="_blank">Ketten & Medaillons</a></div>
+            <div class="has-sub"><a href="https://sites.google.com/view/sunnysschaetze/kunst-sammlergegenst%C3%A4nde/geschirr-deko" target="_blank">Geschirr & Deko</a></div>
+        </div>
+    </div>
+</div>
+
+<div class="category-image">
+    <video autoplay muted loop playsinline>
+        <source src="Sunnys Schätze Verkauf Animiert.mp4" type="video/mp4">
+        Dein Browser unterstützt dieses Animierte Verkaufsbild nicht.
+    </video>
+</div>
+
+<script>
+document.querySelectorAll(".category").forEach(cat => {
+    cat.addEventListener("click", e => {
+        const sub = cat.querySelector(".subcategory");
+        const isShown = sub.classList.contains("show");
+        document.querySelectorAll(".subcategory").forEach(s => s.classList.remove("show"));
+        if(!isShown) sub.classList.add("show");
+        e.stopPropagation();
+    });
+});
+document.addEventListener("click", () => { document.querySelectorAll(".subcategory").forEach(s => s.classList.remove("show")); });
+
+const starCanvas = document.getElementById("stars-canvas");
+const starCtx = starCanvas.getContext("2d");
+const shootCanvas = document.getElementById("shooting-stars");
+const shootCtx = shootCanvas.getContext("2d");
+
+function resizeCanvas(){ starCanvas.width = shootCanvas.width = window.innerWidth; starCanvas.height = shootCanvas.height = window.innerHeight; }
+resizeCanvas(); window.addEventListener("resize",resizeCanvas);
+
+let STAR_COUNT = window.innerWidth < 600 ? 10 + Math.floor(Math.random()*6) : window.innerWidth < 1200 ? 20 + Math.floor(Math.random()*11) : 40 + Math.floor(Math.random()*11);
+const stars=[];
+for(let i=0;i<STAR_COUNT;i++){
+    stars.push({x:Math.random()*starCanvas.width,y:Math.random()*starCanvas.height,size:Math.random()*3+2,hue:Math.random()*360,phase:Math.random()*Math.PI*2,hueSpeed:0.5 + Math.random()});
+}
+function drawStars(){
+    starCtx.clearRect(0,0,starCanvas.width,starCanvas.height);
+    stars.forEach(s=>{
+        s.hue += s.hueSpeed*0.1;
+        if(s.hue>360)s.hue-=360;
+        const alpha = 0.65 + Math.sin(s.phase + performance.now()/500)*0.35;
+        starCtx.shadowColor = `hsla(${s.hue},100%,70%,${alpha})`;
+        starCtx.shadowBlur = 8;
+        starCtx.fillStyle = `hsla(${s.hue},100%,70%,${alpha})`;
+        starCtx.beginPath();
+        let rot=Math.PI/2*3,spikes=5,outer=s.size,inner=s.size/2;
+        starCtx.moveTo(s.x,s.y-outer);
+        for(let j=0;j<spikes;j++){
+            starCtx.lineTo(s.x+Math.cos(rot)*outer,s.y+Math.sin(rot)*outer);
+            rot+=Math.PI/spikes;
+            starCtx.lineTo(s.x+Math.cos(rot)*inner,s.y+Math.sin(rot)*inner);
+            rot+=Math.PI/spikes;
+        }
+        starCtx.closePath(); starCtx.fill();
+        s.phase += 0.02;
+    });
+    requestAnimationFrame(drawStars);
+}
+drawStars();
+
+class ShootingStar{
+    constructor(){this.reset();}
+    reset(){ this.x=Math.random()*shootCanvas.width; this.y=Math.random()*-shootCanvas.height; this.len=50+Math.random()*120; this.speed=0.5+Math.random()*1; this.angle=Math.random()*Math.PI/2.5+Math.PI/6; this.hue=Math.random()*360; this.size=3+Math.random()*2; this.endWidth=6+Math.random()*3; this.hueSpeed=0.5 + Math.random(); }
+    update(){ this.x-=Math.cos(this.angle)*this.speed; this.y+=Math.sin(this.angle)*this.speed; this.hue += this.hueSpeed; if(this.hue>360)this.hue-=360; if(this.x<-this.len || this.y>shootCanvas.height+this.len) this.reset(); }
+    draw(){
+        const endX=this.x,endY=this.y;
+        const startX=endX+Math.cos(this.angle)*this.len;
+        const startY=endY-Math.sin(this.angle)*this.len;
+        shootCtx.beginPath();
+        shootCtx.moveTo(startX,startY);
+        shootCtx.lineTo(endX+this.endWidth/2,endY);
+        shootCtx.lineTo(endX-this.endWidth/2,endY);
+        shootCtx.closePath();
+        const grad = shootCtx.createLinearGradient(startX,startY,endX,endY);
+        grad.addColorStop(0,`hsl(${this.hue},100%,70%)`);
+        grad.addColorStop(1,'rgba(0,0,0,0)');
+        shootCtx.fillStyle = grad; shootCtx.fill();
+        shootCtx.shadowColor = `hsl(${this.hue},100%,70%)`;
+        shootCtx.shadowBlur = 8;
+        shootCtx.fillStyle=`hsl(${this.hue},100%,70%)`;
+        shootCtx.beginPath();
+        let r=Math.PI/2*3,spikes=5,outer=this.size,inner=this.size/2;
+        shootCtx.moveTo(endX,endY-outer);
+        for(let i=0;i<spikes;i++){
+            shootCtx.lineTo(endX+Math.cos(r)*outer,endY+Math.sin(r)*outer);
+            r+=Math.PI/spikes;
+            shootCtx.lineTo(endX+Math.cos(r)*inner,endY+Math.sin(r)*inner);
+            r+=Math.PI/spikes;
+        }
+        shootCtx.closePath(); shootCtx.fill();
+    }
+}
+
+const shootingStars=[];
+let maxShoot = window.innerWidth < 600 ? 2 : window.innerWidth < 1200 ? 4 : 6;
+for(let i=0;i<maxShoot;i++) shootingStars.push(new ShootingStar());
+function animateShooting(){ shootCtx.clearRect(0,0,shootCanvas.width,shootCanvas.height); shootingStars.forEach(s=>{s.update(); s.draw();}); requestAnimationFrame(animateShooting); }
+animateShooting();
+</script>
+</body>
+</html>
