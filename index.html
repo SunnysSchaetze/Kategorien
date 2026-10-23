@@ -18,8 +18,8 @@ body { font-family: Arial, sans-serif; font-size: 14px; margin: 0; padding: 0; b
 .has-sub a:hover { background-color: #cc6600; color: #000; }
 @media (min-width: 600px) { .category:hover .subcategory { display: block; } }
 @media (max-width: 599px) { .category-bar { flex-direction: column; align-items: center; padding: 10px; } .category { width: 90%; margin: 6px 0; font-size: 16px; } .subcategory { position: relative; top: 0; left:0; transform:none; width:100%; } }
-.category-image { text-align: center; margin: 20px 0; }
-.category-image video { max-width: 100%; height: auto; border-radius: 8px; }
+.category-image { display: flex; justify-content: center; align-items: center; width: 100%; margin: 55px auto 25px; }
+.category-image video { display: block; width: min(850px, 92vw); max-width: 100%; height: auto; border-radius: 8px; }
 .hidden { display: none !important; }
 
 
