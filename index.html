@@ -364,7 +364,7 @@ body { font-family: Arial, sans-serif; font-size: 14px; margin: 0; padding: 0; b
 </div>
 
 <div class="category-image">
-    <video id="sunny-video" autoplay muted playsinline>
+    <video autoplay muted loop playsinline>
         <source src="Sunny the Dragon Slayer Animiert.mp4" type="video/mp4">
         Dein Browser unterstützt dieses Animierte Verkaufsbild nicht.
     </video>
@@ -1203,18 +1203,6 @@ function createExplosionStaub(x, y) {
         duration + 60
     );
 }
-
-// VIDEO NUR EINMAL ABSPIELEN
-const sunnyVideo = document.getElementById("sunny-video");
-
-sunnyVideo.addEventListener("ended", function() {
-    sunnyVideo.pause();
-    sunnyVideo.currentTime = sunnyVideo.duration;
-    sunnyVideo.controls = false;
-    sunnyVideo.removeAttribute("controls");
-    sunnyVideo.style.pointerEvents = "none";
-});
-
 </script>
 
 </body>
