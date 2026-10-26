@@ -1047,6 +1047,25 @@ body { background:var(--sunny-black); color:var(--sunny-white); }
 }
 .site-content .subcategory .retro-window-body { max-height: none !important; overflow: visible !important; }
 
+
+/* Smartphone: sichtbarer Scrollbalken innerhalb geöffneter Unterkategorie-Fenster. */
+@media (max-width: 599px) {
+  .site-content .category .subcategory.show {
+    max-height: min(68vh, 490px) !important;
+    height: auto !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    overscroll-behavior-y: contain;
+    scrollbar-width: auto;
+    scrollbar-color: #ff7f00 #1a1a1a;
+    -webkit-overflow-scrolling: touch;
+  }
+  .site-content .category .subcategory.show::-webkit-scrollbar { width: 9px; }
+  .site-content .category .subcategory.show::-webkit-scrollbar-track { background: #1a1a1a; border-radius: 8px; }
+  .site-content .category .subcategory.show::-webkit-scrollbar-thumb { background: #ff7f00; border: 2px solid #1a1a1a; border-radius: 8px; }
+  .site-content .category .subcategory.show::-webkit-scrollbar-thumb:hover { background: #ff9b33; }
+}
+
 </style>
 </head>
 <body>
