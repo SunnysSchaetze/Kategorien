@@ -6,10 +6,10 @@
 <title>Kategorien</title>
 <style>
 body { font-family: Arial, sans-serif; font-size: 14px; margin: 0; padding: 0; background: #000; color: #fff; min-height: 100vh; position: relative; overflow-x: hidden; }
-#stars-canvas, #shooting-stars { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+#stars-canvas, #shooting-stars { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
 .category-bar { padding: 15px; text-align: center; display: flex; flex-wrap: wrap; justify-content: space-between; }
 .category { color: #ffaa33; margin: 10px; cursor: pointer; position: relative; user-select: none; padding: 5px 0; width: 22%; text-align: center; transition: background-color 0.3s ease, color 0.3s ease; }
-.category:hover { background-color: #cc6600; color: #000; }
+.category:hover { background-color: transparent; color: #ffaa33; }
 .subcategory { display: none; position: absolute; background: #000; color: #fff; padding: 10px; border-radius: 4px; min-width: 160px; z-index: 100; top: 40px; left: 50%; transform: translateX(-50%); max-height: 200px; overflow-y: auto; }
 .subcategory.show { display: block; }
 .subcategory div { padding: 10px 0; cursor: pointer; font-size: 16px; }
@@ -276,9 +276,93 @@ body { font-family: Arial, sans-serif; font-size: 14px; margin: 0; padding: 0; b
             scale(.15);
     }
 }
+
+/* RGB-Rahmen nur am äußersten Bildschirmrand – keine Hintergrundfläche */
+.rgb-aussenrahmen {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  pointer-events: none;
+  border: 4px solid transparent;
+  border-image: conic-gradient(from 0deg, #ff003c, #ffb800, #20ff68, #00d9ff, #763bff, #ff00c8, #ff003c) 1;
+  animation: rgb-farbwechsel 9s linear infinite;
+  box-sizing: border-box;
+}
+@keyframes rgb-farbwechsel { to { filter: hue-rotate(360deg); } }
+/* Inhalte über dem Sternenhimmel, ohne diesen abzudecken */
+.category-bar, .category-image { position: relative; z-index: 1; }
+/* Die erste Kategorienreihe liegt über der zweiten, damit z.B.
+   Druckschriften nicht durch das Gaming-Dropdown hindurchscheint. */
+@media (min-width: 600px) {
+  #shooting-stars ~ .category-bar { z-index: 2; }
+  #shooting-stars + .category-bar { z-index: 3; }
+  .category-bar .category:hover { z-index: 4; }
+}
+/* Dieselbe Dropdown-Kastenoptik auf PC und Smartphone */
+.subcategory {
+  background: #111;
+  border: 1px solid #ffaa33;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(255,170,51,.25);
+  box-sizing: border-box;
+}
+
+/* Responsive Optimierung: alle Bildschirmbreiten und Eingabearten */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { width: 100%; }
+.category-bar {
+  width: 100%; max-width: 1500px; margin-inline: auto;
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(8px, 1.5vw, 24px); padding: clamp(12px, 2vw, 28px);
+  overflow: visible;
+}
+.category { width: auto; min-width: 0; margin: 0; padding: 12px 8px;
+  font-size: clamp(14px, 1.2vw, 19px); line-height: 1.4;
+  overflow-wrap: anywhere; }
+.category-bar:first-of-type { z-index: 3; }
+.category-bar:nth-of-type(2) { z-index: 2; }
+/* Die erste Zeile liegt stets über der zweiten, auch wenn ein Dropdown offen ist. */
+#shooting-stars ~ .category-bar { z-index: 2; }
+#shooting-stars + .category-bar { z-index: 3; }
+.category:focus-within, .category:hover { z-index: 5; }
+.subcategory {
+  top: calc(100% + 3px); left: 50%; transform: translateX(-50%);
+  width: max-content; min-width: min(210px, 85vw);
+  max-width: min(360px, calc(100vw - 32px)); max-height: min(45vh, 340px);
+  overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain;
+  padding: 8px; text-align: left;
+}
+.subcategory .has-sub { padding: 0; }
+.subcategory a { display: block; padding: 11px 12px; line-height: 1.4;
+  overflow-wrap: anywhere; border-radius: 7px; }
+.category-image { margin: clamp(24px, 5vw, 55px) auto 25px; padding-inline: 16px; }
+.category-image video { width: min(850px, 100%); height: auto; }
+.rgb-aussenrahmen { border-width: clamp(2px, .35vw, 5px); }
+/* Hover nur für Geräte mit echter Maus; Touch wird durch Klick gesteuert. */
+@media (hover: none), (pointer: coarse) {
+  .category:hover .subcategory:not(.show) { display: none; }
+}
+@media (max-width: 900px) {
+  .category-bar { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .subcategory { max-width: min(330px, calc(100vw - 28px)); }
+}
+@media (max-width: 599px) {
+  .category-bar { display: flex; flex-direction: column; align-items: stretch;
+    gap: 7px; padding: 12px 16px; }
+  .category { width: 100%; margin: 0; padding: 10px 6px; font-size: 16px; }
+  .subcategory { position: relative; top: auto; left: auto; transform: none;
+    width: 100%; min-width: 0; max-width: 100%; max-height: 40vh;
+    margin-top: 8px; }
+  .category-image { margin-top: 24px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rgb-aussenrahmen { animation: none; }
+}
 </style>
 </head>
 <body>
+<div class="rgb-aussenrahmen" aria-hidden="true"></div>
 
 <canvas id="stars-canvas"></canvas>
 <canvas id="shooting-stars"></canvas>
@@ -373,6 +457,7 @@ body { font-family: Arial, sans-serif; font-size: 14px; margin: 0; padding: 0; b
 <script>
 document.querySelectorAll(".category").forEach(cat => {
     cat.addEventListener("click", e => {
+        if (e.target.closest("a")) return;
         const sub = cat.querySelector(".subcategory");
         const isShown = sub.classList.contains("show");
         document.querySelectorAll(".subcategory").forEach(s => s.classList.remove("show"));
@@ -392,8 +477,8 @@ const shootCanvas = document.getElementById("shooting-stars");
 const shootCtx = shootCanvas.getContext("2d");
 
 function resizeCanvas(){
-    starCanvas.width = shootCanvas.width = window.innerWidth;
-    starCanvas.height = shootCanvas.height = window.innerHeight;
+    starCanvas.width = shootCanvas.width = Math.min(window.innerWidth, 3840);
+    starCanvas.height = shootCanvas.height = Math.min(window.innerHeight, 2160);
 }
 
 resizeCanvas();
