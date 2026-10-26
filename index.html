@@ -12,11 +12,11 @@ body { font-family: Arial, sans-serif; font-size: 14px; margin: 0; padding: 0; b
 .category:hover { background-color: transparent; color: #ffaa33; }
 .subcategory { display: none; position: absolute; background: #000; color: #fff; padding: 10px; border-radius: 4px; min-width: 160px; z-index: 100; top: 40px; left: 50%; transform: translateX(-50%); max-height: 200px; overflow-y: auto; }
 .subcategory.show { display: block; }
-.subcategory div { padding: 10px 0; cursor: pointer; font-size: 16px; }
-.subcategory div:hover { background-color: #cc6600; color: #000; }
+/* Keine globalen div-Regeln innerhalb der Fenster: Fensterkopf und Schliessen-Container bleiben unberuehrt. */
+/* Entfernt: globaler div:hover-Effekt faerbte auch die gesamte Fenster-Titelleiste und den X-Container ein. Unterkategorie-Links haben eigene Hover-Regeln. */
 .has-sub a { color: #ffaa33; text-decoration: none; }
 .has-sub a:hover { background-color: #cc6600; color: #000; }
-@media (min-width: 600px) { .category:hover .subcategory { display: block; } }
+/* Kategorien werden ausschließlich per Klick geöffnet. */
 @media (max-width: 599px) { .category-bar { flex-direction: column; align-items: center; padding: 10px; } .category { width: 90%; margin: 6px 0; font-size: 16px; } .subcategory { position: relative; top: 0; left:0; transform:none; width:100%; } }
 .category-image { display: flex; justify-content: center; align-items: center; width: 100%; margin: 55px auto 25px; }
 .category-image video { display: block; width: min(850px, 92vw); max-width: 100%; height: auto; border-radius: 8px; }
@@ -409,90 +409,698 @@ body { width: 100%; }
 }
 /* Der Rahmen bleibt am Rand des Google-Sites-Einbettungsfensters. */
 .rgb-aussenrahmen { position: fixed; inset: 0; }
+
+/* Nur eine sichtbare Scrollanzeige innerhalb des RGB-Außenrahmens.
+   Die Seite bleibt scrollbar, nur die native Leiste wird verborgen. */
+html, body { scrollbar-width: none !important; -ms-overflow-style: none; }
+html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; width: 0; height: 0; }
+.mobile-scroll-indicator { display: none; }
+@media (max-width: 700px), (hover: none) and (pointer: coarse) {
+  .mobile-scroll-indicator {
+    display: block; position: fixed; right: 9px; top: 16px; bottom: 16px;
+    width: 8px; border-radius: 12px; background: rgba(15,15,15,.95);
+    box-shadow: inset 0 0 0 1px rgba(255,153,0,.65);
+    z-index: 210; pointer-events: none; opacity: 0;
+    transition: opacity .2s ease;
+  }
+  .mobile-scroll-indicator.is-scrollable { opacity: 1; }
+  .mobile-scroll-thumb {
+    position: absolute; left: 1px; right: 1px; top: 0;
+    height: 28%; min-height: 28px; border-radius: 12px;
+    background: linear-gradient(180deg, #ffcc33, #ff8a00, #d95700);
+    box-shadow: 0 0 7px rgba(255,153,0,.8);
+  }
+}
+
+/* Minimierte Fenster auch bei Desktop-Hover ausgeblendet halten. */
+.site-content .category .subcategory.is-minimized { display: none !important; }
+.retro-window-min { cursor: pointer; }
+.retro-window-min:hover, .retro-window-min:focus-visible { filter: brightness(1.16); outline: 2px solid #ff7f00; outline-offset: 1px; }
+/* Retro-PC 2003 Orange: Dropdown-Design */
+.site-content .subcategory {
+  background: linear-gradient(145deg,#322319 0%,#171310 55%,#26180f 100%);
+  border: 2px solid #ff9000;
+  border-radius: 12px;
+  padding: 0;
+  box-shadow: 0 12px 30px rgba(0,0,0,.65), 0 0 18px rgba(255,132,0,.28), inset 0 0 0 1px #7b390b;
+  color: #ffe0b6;
+  text-align: left;
+}
+.subcategory .retro-window-title {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  padding: 8px 10px;
+  background: linear-gradient(180deg,#ffe0a1 0%,#ffb74e 13%,#ff8a00 48%,#d65a00 80%,#a93d00 100%);
+  border-bottom: 1px solid #ffdf9b;
+  color: #422000; font-size: 13px; font-weight: 700;
+  line-height: 1.3;
+}
+.retro-title-label { display: flex; align-items: center; gap: 7px; min-width: 0; }
+.retro-title-icon {
+  display: inline-grid; place-items: center; flex: none;
+  width: 23px; height: 23px; border: 1px solid #a84b00; border-radius: 4px;
+  background: linear-gradient(145deg,#fff0c9,#ff9a24); color: #743000;
+}
+.retro-title-icon svg { display: block; filter: drop-shadow(1px 1px 1px rgba(70,26,0,.5)); }
+.retro-window-min {
+  flex: none; width: 23px; height: 21px; display: grid; place-items: center;
+  border: 1px solid #9d4900; border-radius: 4px;
+  background: linear-gradient(180deg,#ffe1a4,#ed8a25);
+  box-shadow: inset 0 1px 0 #fff0c4;
+  color: #6c3000; font-weight: bold;
+}
+.retro-window-body { padding: 10px; }
+.retro-window-caption {
+  display: flex; align-items: center; justify-content: space-between;
+  color: #ffc783; font-size: 10px; font-weight: bold; letter-spacing: .09em;
+  margin: 1px 2px 9px;
+}
+.site-content .subcategory .has-sub { padding: 0; margin: 0 0 7px; }
+.site-content .subcategory .has-sub:last-child { margin-bottom: 0; }
+.site-content .subcategory .has-sub a {
+  display: flex; align-items: center; gap: 9px;
+  padding: 9px 10px; min-height: 44px;
+  background: linear-gradient(180deg,#543720,#352316);
+  border: 1px solid #ad6b2e; border-radius: 7px;
+  box-shadow: inset 0 1px 0 rgba(255,219,161,.18), 0 2px 4px rgba(0,0,0,.3);
+  color: #ffe0b6; font-size: 14px; text-decoration: none;
+  transition: background .18s, border-color .18s, box-shadow .18s, transform .18s;
+}
+.retro-link-icon {
+  flex: none; display: grid; place-items: center; width: 28px; height: 28px;
+  border-radius: 5px; border: 1px solid #bd772f; background: #2a190d;
+  color: #ffb34d; font-size: 15px;
+}
+.retro-link-icon svg { display:block; filter: drop-shadow(1px 1px 1px rgba(70,26,0,.65)); }
+.retro-link-label { min-width: 0; flex: 1; }
+.retro-link-arrow { flex: none; color: #ff9e2c; font-size: 20px; line-height: 1; }
+.site-content .subcategory .has-sub a:hover,
+.site-content .subcategory .has-sub a:focus-visible {
+  background: linear-gradient(180deg,#80502b,#523018);
+  border-color: #ffc16d; color: #fff2d9;
+  box-shadow: 0 0 12px rgba(255,154,36,.38), inset 0 1px 0 #c88a4c;
+  outline: none;
+}
+.site-content .subcategory .has-sub a:active { transform: translateY(1px); }
+@media (prefers-reduced-motion: reduce) {
+  .site-content .subcategory .has-sub a { transition: none; }
+}
+
+
+/* Oberkategorien: passende orange Retro-PC-2003-Schaltflächen mit Reliefpfeil */
+.site-content .category-bar .category { padding: 0; border-radius: 9px; }
+.site-content .category-bar .main-category-label {
+  position: relative; display: flex; align-items: center; justify-content: center;
+  gap: 9px; min-height: 52px; width: 100%; padding: 11px 28px 11px 12px;
+  border: 2px solid #8e3a04; border-top-color: #ffe09b; border-left-color: #ffbe62;
+  border-radius: 9px; color: #fff0c5; font-weight: 800; letter-spacing: .12px;
+  text-shadow: 0 1px 0 #602300, 1px 2px 2px #2b1000;
+  background: linear-gradient(180deg,#ffe3a0 0%,#ffb747 7%,#f18417 43%,#a94205 51%,#6b2806 100%);
+  box-shadow: inset 0 1px 0 #fff1c6, inset 0 -2px 2px #4c1b03, 0 3px 0 #3a1907, 0 5px 12px #0009;
+  transition: filter .18s, transform .18s, box-shadow .18s;
+}
+.site-content .category-bar .main-category-name { min-width: 0; overflow-wrap: anywhere; }
+.site-content .category-bar .main-category-arrow {
+  position: absolute; right: 10px; top: 50%; width: 13px; height: 13px;
+  border: 1px solid #612703; border-top-color: #ffdc93; border-left-color: #ffc36b;
+  border-radius: 3px; background: linear-gradient(#ffc26b,#d26c0c 52%,#8c3805);
+  box-shadow: inset 0 1px #ffe7ac, 0 1px 2px #321201;
+  transform: translateY(-50%); transition: background .18s;
+}
+.site-content .category-bar .main-category-arrow::after {
+  content: ''; position: absolute; left: 3px; top: 4px;
+  width: 5px; height: 5px; border-right: 2px solid #4e2005;
+  border-bottom: 2px solid #4e2005; transform: rotate(45deg);
+  filter: drop-shadow(0 1px 0 #ffda84);
+}
+.site-content .category-bar .category:hover > .main-category-label,
+.site-content .category-bar .category:focus-within > .main-category-label {
+  filter: brightness(1.13); transform: translateY(-1px);
+  box-shadow: inset 0 1px 0 #fff5d4, inset 0 -2px 2px #4c1b03, 0 4px 0 #3a1907, 0 7px 15px #000b;
+}
+.site-content .category-bar .category:active > .main-category-label {
+  transform: translateY(2px); box-shadow: inset 0 2px 5px #4a1c05, 0 1px 0 #3a1907;
+}
+@media (max-width: 599px) {
+  .site-content .category-bar .category { padding: 0; }
+  .site-content .category-bar .main-category-label { min-height: 49px; }
+}
+
+
+/* Oberbegriffe als anklickbare Windows-XP-Programmdateien, ohne .exe-Endung */
+.site-content .category-bar .main-category-label {
+  justify-content: flex-start; gap: 10px; padding: 9px 35px 9px 11px;
+  min-height: 54px; border-radius: 5px;
+  background: linear-gradient(180deg,#fff2d3 0%,#ffd49a 7%,#ed9b43 48%,#cc6e1d 51%,#a94d10 100%);
+  border: 1px solid #7a3a12; border-top-color: #ffe8bb; border-left-color: #ffcd86;
+  box-shadow: inset 0 1px 0 #fff6e1, inset 1px 0 0 #ffdc9f, inset 0 -2px 0 #71310e, 0 3px 0 #48210d, 0 5px 10px #0008;
+  color: #fff5de; text-align: left; font-family: Tahoma, Verdana, sans-serif;
+  font-size: 13px; font-weight: 700; letter-spacing: 0;
+  text-shadow: 1px 1px 1px #5c290d;
+}
+.site-content .category-bar .main-category-name { flex: 1; }
+.site-content .category-bar .main-category-file-icon {
+  flex: none; position: relative; display: block; width: 24px; height: 26px;
+  border: 1px solid #47586c; border-radius: 2px 5px 2px 2px;
+  background: linear-gradient(145deg,#ffffff 0%,#f1f5fc 50%,#a9bfd9 100%);
+  box-shadow: 1px 2px 1px #4b240d99, inset 1px 1px 0 #fff;
+}
+.site-content .category-bar .main-category-file-icon::before {
+  content: ''; position: absolute; right: -1px; top: -1px; width: 8px; height: 8px;
+  background: linear-gradient(135deg,#eaf2ff 0 48%,#7e9bb9 49% 55%,#c5d5e7 56%);
+  border-left: 1px solid #647b96; border-bottom: 1px solid #647b96;
+}
+.site-content .category-bar .main-category-file-icon::after {
+  content: ''; position: absolute; left: 4px; top: 10px; width: 14px; height: 11px;
+  border: 1px solid #36516c; border-radius: 1px;
+  background: linear-gradient(#75b4e6 0 3px,#f9fcff 3px 100%);
+  box-shadow: inset 0 0 0 1px #d2e3f4, 1px 1px 0 #647d98;
+}
+.site-content .category-bar .main-category-arrow {
+  right: 9px; width: 20px; height: 20px; border-radius: 3px;
+  background: linear-gradient(#fff0c8,#e5a85e 48%,#ae5b1e 50%,#8e410e);
+}
+.site-content .category-bar .main-category-arrow::after {
+  left: 6px; top: 6px; width: 6px; height: 6px;
+}
+
+
+/* Desktop-2003-Verknüpfungen statt breiter EXE-Schaltflächen */
+.site-content .category-bar .category { background:transparent; border:0; box-shadow:none; border-radius:5px; }
+.site-content .category-bar .main-category-label {
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  position:relative; gap:6px; min-height:112px; padding:12px 9px 11px;
+  background:transparent; border:1px solid transparent; border-radius:5px;
+  box-shadow:none; color:#fff2d7; font:700 13px/1.3 Tahoma,Verdana,sans-serif;
+  text-shadow:1px 2px 2px #000, -1px 0 2px #000, 0 0 6px #542400;
+  text-align:center; transition:background .15s,border-color .15s;
+}
+.site-content .category-bar .main-category-file-icon {
+  width:46px; height:46px; border:0; border-radius:7px;
+  background:linear-gradient(145deg,#ffdc8d 0%,#f69d2b 43%,#b4540b 48%,#713008 100%);
+  box-shadow:inset 1px 2px 1px #fff0bf, inset -2px -3px 2px #572205, 2px 4px 4px #0009;
+  display:grid; place-items:center; color:#572805;
+}
+.site-content .category-bar .main-category-file-icon::before,
+.site-content .category-bar .main-category-file-icon::after { content:none; }
+.site-content .category-bar .main-category-file-icon svg { width:30px; height:30px; stroke:#56270b; stroke-width:1.8; fill:none; filter:drop-shadow(1px 1px 0 #ffd18a); }
+.site-content .category-bar .main-category-name { flex:initial; max-width:100%; overflow-wrap:anywhere; }
+.site-content .category-bar .main-category-arrow {
+  position:relative; right:auto; top:auto; transform:none; width:17px; height:15px;
+  border:1px solid #a96524; border-radius:3px;
+  background:linear-gradient(#ffe4ad,#d7832e 53%,#91430d);
+  box-shadow:inset 0 1px #fff1c7,1px 2px 2px #0008;
+}
+.site-content .category-bar .main-category-arrow::after { left:5px; top:3px; width:5px; height:5px; }
+.site-content .category-bar .category:hover > .main-category-label,
+.site-content .category-bar .category:focus-within > .main-category-label {
+  background:rgba(255,153,35,.2); border-color:rgba(255,195,107,.55);
+  filter:none; transform:none; box-shadow:inset 0 0 0 1px rgba(255,240,199,.1);
+}
+.site-content .category-bar .category:active > .main-category-label {
+  background:rgba(255,156,39,.35); transform:none; box-shadow:none;
+}
+@media(max-width:599px) {
+  .site-content .category-bar .main-category-label { min-height:96px; padding:10px 8px; }
+  .site-content .category-bar .category { width:90%; }
+}
+
+
+/* Einheitliche Farbwelt: Orange / Schwarz / Dunkelgrau */
+body { background:#050505; color:#f1eee9; }
+.site-content .category-bar .main-category-label { color:#f7f3ed; text-shadow:1px 2px 3px #000,0 0 5px #000; }
+.site-content .category-bar .main-category-file-icon {
+  background:linear-gradient(145deg,#ffb344 0%,#f57a08 38%,#b94700 51%,#252525 52%,#101010 100%);
+  border:1px solid #ef8118;
+  box-shadow:inset 1px 1px 0 #ffd08a,inset -2px -2px 2px #090909,2px 4px 6px #000c;
+}
+.site-content .category-bar .main-category-file-icon svg {stroke:#111;filter:drop-shadow(1px 1px 0 #ffb35b);}
+.site-content .category-bar .main-category-arrow {
+  background:linear-gradient(180deg,#424242,#191919);
+  border:1px solid #f18724;box-shadow:inset 0 1px 0 #666,0 2px 4px #000a;
+}
+.site-content .category-bar .main-category-arrow::after {border-color:#ff9b34;filter:none;}
+.site-content .category-bar .category:hover > .main-category-label,
+.site-content .category-bar .category:focus-within > .main-category-label {
+  background:rgba(255,120,0,.14);border-color:rgba(255,142,25,.65);
+}
+.site-content .subcategory {
+  background:linear-gradient(145deg,#272727 0%,#111 58%,#202020 100%);
+  border-color:#f08419;color:#eee;box-shadow:0 12px 30px #000c,0 0 16px #f80a,inset 0 0 0 1px #555;
+}
+.site-content .retro-window-title {
+  background:linear-gradient(180deg,#ffb34b 0%,#f57b09 45%,#c65300 55%,#383838 100%);
+  border-bottom-color:#171717;color:#141414;
+}
+.site-content .retro-title-icon {background:linear-gradient(145deg,#ffa93c,#333);border-color:#a34a0b;color:#151515;}
+.site-content .retro-window-min {background:linear-gradient(#555,#202020);border-color:#f68a20;color:#ffac55;}
+.site-content .retro-window-subtitle {color:#ffa144;}
+.site-content .subcategory .has-sub a {
+  background:linear-gradient(180deg,#393939,#202020);
+  border:1px solid #666;color:#f5f0e9;
+  box-shadow:inset 0 1px 0 #555,0 2px 4px #0009;
+}
+.site-content .subcategory .has-sub a:hover,
+.site-content .subcategory .has-sub a:focus-visible {
+  background:linear-gradient(180deg,#ff9b2f,#c95a00);
+  border-color:#ffbb68;color:#111;
+  box-shadow:inset 0 1px 0 #ffd09a,0 0 12px #ff790066;
+}
+.retro-link-icon {background:#171717;border-color:#d46b13;color:#ff9b32;}
+.retro-link-icon svg {filter:drop-shadow(1px 1px 1px #000);}
+.retro-link-arrow {color:#ff891b;}
+.mobile-scroll-indicator {background:#141414ee;box-shadow:inset 0 0 0 1px #ff8000aa;}
+.mobile-scroll-thumb {background:linear-gradient(#ffac39,#f47b00,#a83f00);}
+
+
+/* Pfeil direkt rechts neben dem Kategorienamen statt darunter */
+.site-content .category-bar .main-category-caption {
+  display:inline-flex; align-items:center; justify-content:center;
+  gap:7px; max-width:100%; flex-wrap:nowrap;
+}
+.site-content .category-bar .main-category-caption .main-category-name {
+  flex:0 1 auto; min-width:0;
+}
+.site-content .category-bar .main-category-caption .main-category-arrow {
+  flex:0 0 17px; margin:0; align-self:center;
+}
+
+
+/* Gewünschte vier Farben – ursprünglicher RGB-Außenrahmen bleibt unangetastet. */
+:root { --sunny-orange:#ff7f00; --sunny-black:#000000; --sunny-gray:#1a1a1a; --sunny-white:#f9f9f9; }
+body { background:var(--sunny-black); color:var(--sunny-white); }
+.site-content .category-bar .main-category-label { color:var(--sunny-white); text-shadow:1px 2px 3px var(--sunny-black); }
+.site-content .category-bar .main-category-file-icon {
+  background:var(--sunny-orange);
+  border-color:var(--sunny-orange);
+  box-shadow:inset 1px 1px 0 #f9f9f955,inset -2px -2px 2px #0008,2px 4px 6px #000c;
+}
+.site-content .category-bar .main-category-file-icon svg {stroke:var(--sunny-black);filter:drop-shadow(1px 1px 1px #0005);}
+.site-content .category-bar .main-category-arrow {
+  background:linear-gradient(180deg,var(--sunny-gray),var(--sunny-black));
+  border-color:var(--sunny-orange);box-shadow:inset 0 1px 0 #f9f9f922,0 2px 4px #000a;
+}
+.site-content .category-bar .main-category-arrow::after {border-color:var(--sunny-orange);}
+.site-content .category-bar .category:hover > .main-category-label,
+.site-content .category-bar .category:focus-within > .main-category-label {background:#ff7f0026;border-color:var(--sunny-orange);}
+.site-content .subcategory {
+  background:linear-gradient(145deg,var(--sunny-gray),var(--sunny-black));
+  border-color:var(--sunny-orange);color:var(--sunny-white);
+  box-shadow:0 12px 30px #000c,0 0 16px #ff7f0033,inset 0 0 0 1px #f9f9f922;
+}
+.site-content .retro-window-title {
+  background:linear-gradient(180deg,var(--sunny-orange) 0%,var(--sunny-orange) 54%,var(--sunny-gray) 100%);
+  border-bottom-color:var(--sunny-black);color:var(--sunny-black);
+}
+.site-content .retro-title-icon {background:linear-gradient(145deg,var(--sunny-orange),var(--sunny-gray));border-color:var(--sunny-black);color:var(--sunny-black);}
+.site-content .retro-window-min {background:linear-gradient(var(--sunny-gray),var(--sunny-black));border-color:var(--sunny-orange);color:var(--sunny-orange);}
+.site-content .retro-window-subtitle {color:var(--sunny-orange);}
+.site-content .subcategory .has-sub a {
+  background:linear-gradient(180deg,#292929,var(--sunny-gray));
+  border-color:#f9f9f944;color:var(--sunny-white);
+  box-shadow:inset 0 1px 0 #f9f9f91c,0 2px 4px #0009;
+}
+.site-content .subcategory .has-sub a:hover,
+.site-content .subcategory .has-sub a:focus-visible {
+  background:var(--sunny-orange);border-color:var(--sunny-white);color:var(--sunny-black);
+  box-shadow:inset 0 1px 0 #f9f9f966,0 0 12px #ff7f0066;
+}
+.retro-link-icon {background:var(--sunny-black);border-color:var(--sunny-orange);color:var(--sunny-orange);}
+.retro-link-icon svg {filter:drop-shadow(1px 1px 1px var(--sunny-black));}
+.retro-link-arrow {color:var(--sunny-orange);}
+.mobile-scroll-indicator {background:#1a1a1aee;box-shadow:inset 0 0 0 1px var(--sunny-orange);}
+.mobile-scroll-thumb {background:var(--sunny-orange);}
+
+
+/* Dropdown niemals durch Hover anzeigen, nur durch einen echten Klick. */
+.site-content .category .subcategory:not(.show) { display:none !important; }
+.site-content .category .subcategory.show:not(.is-minimized) { display:block; }
+/* Retro-Desktop: Programmstart beim Anklicken einer Oberkategorie */
+.site-content .category-bar .category > .main-category-label { cursor:pointer; }
+.site-content .category-bar .category.is-launching .main-category-file-icon {
+  animation:sunny-exe-launch .48s cubic-bezier(.2,.8,.25,1) both;
+}
+.site-content .category-bar .category.is-launching .main-category-caption {
+  animation:sunny-exe-caption .48s ease-out both;
+}
+.site-content .category .subcategory.show:not(.is-minimized) {
+  transform-origin:top center;
+  animation:sunny-window-open .62s cubic-bezier(.2,.78,.22,1) both;
+}
+@keyframes sunny-exe-launch {
+  0% { transform:scale(1); filter:brightness(1); }
+  22% { transform:scale(.86) translateY(3px); filter:brightness(1.45); }
+  54% { transform:scale(1.14) translateY(-4px); filter:brightness(1.3) drop-shadow(0 0 10px #ff7f00); }
+  100% { transform:scale(1); filter:brightness(1); }
+}
+@keyframes sunny-exe-caption {
+  0%,30% { opacity:1; } 55% { opacity:.65; } 100% { opacity:1; }
+}
+@keyframes sunny-window-open {
+  0% { opacity:0; transform:scale(.72,.12) translateY(-14px); filter:brightness(1.6); }
+  22% { opacity:1; transform:scale(.82,.16) translateY(-8px); filter:brightness(1.35); }
+  42% { opacity:1; transform:scale(.88,.16) translateY(-5px); filter:brightness(1.2); }
+  72% { opacity:1; transform:scale(1.025,1.035) translateY(0); filter:brightness(1.07); }
+  100% { opacity:1; transform:scale(1,1) translateY(0); filter:brightness(1); }
+}
+@media (prefers-reduced-motion:reduce) {
+  .site-content .category-bar .category.is-launching .main-category-file-icon,
+  .site-content .category-bar .category.is-launching .main-category-caption,
+  .site-content .category .subcategory.show:not(.is-minimized) { animation:none; }
+}
+
+
+/* Fenster beim Oeffnen dauerhaft mittig unter dem angeklickten Desktop-Icon.
+   Die Zentrierung ist von der Skalierungsanimation getrennt. */
+@media (min-width: 600px) {
+  .site-content .category-bar .category > .subcategory {
+    left: 50%; right: auto;
+    translate: -50% 0;
+    transform: none;
+  }
+}
+@container sunny (min-width: 600px) {
+  .site-content .category-bar .category > .subcategory {
+    left: 50%; right: auto;
+    translate: -50% 0;
+    transform: none;
+  }
+}
+@container sunny (max-width: 599px) {
+  .site-content .category-bar .category > .subcategory {
+    position: relative; left: auto; right: auto;
+    translate: none; transform: none;
+    margin-inline: auto;
+  }
+}
+
+
+/* Desktop-Verknüpfungen: kein Auswahlrahmen beim Darüberfahren. */
+.site-content .category-bar .category:hover > .main-category-label,
+.site-content .category-bar .category:focus-within > .main-category-label {
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  outline: none !important;
+  filter: none !important;
+  transform: none !important;
+}
+
+/* Desktop-Verknüpfungen gleichmäßig über die volle Containerbreite verteilen. */
+.site-content .category-bar {
+  width: 100%;
+  max-width: 100%;
+  margin-inline: auto;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  justify-content: stretch;
+  justify-items: center;
+  align-items: start;
+  column-gap: clamp(8px, 2.2vw, 36px);
+  row-gap: clamp(12px, 2vw, 24px);
+  padding-inline: clamp(8px, 1.8vw, 24px);
+}
+.site-content .category-bar > .category {
+  width: 100%;
+  min-width: 0;
+  text-align: center;
+}
+.site-content .category-bar .main-category-label {
+  margin-inline: auto;
+}
+@media (max-width: 900px) {
+  .site-content .category-bar { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@container sunny (max-width: 900px) {
+  .site-content .category-bar { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 599px) {
+  .site-content .category-bar {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+  }
+}
+@container sunny (max-width: 599px) {
+  .site-content .category-bar {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+  }
+}
+@container sunny (max-width: 390px) {
+  .site-content .category-bar { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* Windows-XP-Fenstersteuerung: nur Schließen. */
+.site-content .retro-window-controls { display:flex; align-items:center; gap:4px; flex:none; }
+.site-content .retro-window-control {
+  appearance:none; display:grid; place-items:center; padding:0;
+  width:24px; height:22px; border:1px solid #ff7f00; border-radius:4px;
+  background:linear-gradient(#424242,#1a1a1a); color:#f9f9f9;
+  font:700 17px/1 Arial,sans-serif; cursor:pointer;
+  box-shadow:inset 0 1px 0 #ffffff44,0 1px 2px #0009;
+}
+/* Kein zusätzlicher Hover-Rahmen: nur dezenter Farbwechsel. */
+.site-content .retro-window-close:hover {
+  border-color:transparent; outline:none; box-shadow:none;
+  background:#ff920f; color:#000;
+}
+.site-content .retro-window-close:focus:not(:focus-visible) { outline:none; }
+.site-content .retro-window-close:active { border-color:transparent; outline:none; }
+@keyframes sunnyCloseClick {
+  0% { transform:scale(1); filter:brightness(1); }
+  40% { transform:scale(.78); filter:brightness(1.35); }
+  75% { transform:scale(1.1); filter:brightness(1.15); }
+  100% { transform:scale(.92); filter:brightness(1); }
+}
+.site-content .retro-window-close.is-closing {
+  animation:sunnyCloseClick 190ms ease-out both;
+  pointer-events:none;
+  border-color:transparent;
+  outline:none;
+  box-shadow:none;
+}
+.site-content .retro-window-control:focus-visible { outline:2px solid #f9f9f9; outline-offset:2px; }
+.site-content .retro-window-close { background:linear-gradient(#ff9e42,#d65b00); color:#000; }
+
+
+/* Orangefarbener XP-Schliessen-Button ohne zusaetzlichen Hover-/Fokusrahmen */
+.site-content button.retro-window-control.retro-window-close,
+.site-content button.retro-window-control.retro-window-close:hover,
+.site-content button.retro-window-control.retro-window-close:focus,
+.site-content button.retro-window-control.retro-window-close:focus-visible,
+.site-content button.retro-window-control.retro-window-close:active {
+  border:1px solid transparent !important;
+  outline:0 !important;
+  outline-offset:0 !important;
+  box-shadow:none !important;
+  -webkit-tap-highlight-color:transparent;
+  background:linear-gradient(180deg,#ffad55 0%,#ff7f00 52%,#db6500 100%);
+  color:#000;
+}
+.site-content button.retro-window-control.retro-window-close:hover { background:linear-gradient(180deg,#ffb75e,#ff8c16 55%,#e76a00); }
+.site-content button.retro-window-control.retro-window-close:active { background:linear-gradient(180deg,#dc6800,#ff7f00); }
+
+
+/* Endgueltige Korrektur: keinerlei Hover-Kontur um den X-Button. */
+.site-content .retro-window-controls > button.retro-window-close,
+.site-content .retro-window-controls > button.retro-window-close:hover,
+.site-content .retro-window-controls > button.retro-window-close:focus,
+.site-content .retro-window-controls > button.retro-window-close:focus-visible,
+.site-content .retro-window-controls > button.retro-window-close:active,
+.site-content .retro-window-controls > button.retro-window-close.is-closing {
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  text-decoration: none !important;
+  background-clip: padding-box;
+}
+.site-content .retro-window-controls > button.retro-window-close::before,
+.site-content .retro-window-controls > button.retro-window-close::after {
+  content: none !important;
+  display: none !important;
+}
+.site-content .retro-window-controls > button.retro-window-close:hover {
+  background: linear-gradient(180deg,#ffb75e,#ff8c16 55%,#e76a00) !important;
+}
+.site-content .retro-window-controls > button.retro-window-close:active {
+  background: linear-gradient(180deg,#dc6800,#ff7f00) !important;
+}
+
+
+/* X: kein zusaetzliches Rechteck beim Hover, der orange Button bleibt konstant. */
+.site-content .retro-window-controls > button.retro-window-close,
+.site-content .retro-window-controls > button.retro-window-close:hover,
+.site-content .retro-window-controls > button.retro-window-close:focus,
+.site-content .retro-window-controls > button.retro-window-close:focus-visible {
+  background: linear-gradient(180deg,#ff9e42,#d65b00) !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  filter: none !important;
+  -webkit-tap-highlight-color: transparent;
+}
+.site-content .retro-window-controls > button.retro-window-close:hover {
+  transform: none !important;
+}
+.site-content .retro-window-controls > button.retro-window-close:active,
+.site-content .retro-window-controls > button.retro-window-close.is-closing {
+  background: linear-gradient(180deg,#dc6800,#ff7f00) !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Smartphone: Desktop-Verknüpfungen einzeln untereinander. */
+@media (max-width: 599px) {
+  .site-content .category-bar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) !important;
+    justify-items: center;
+  }
+  .site-content .category-bar > .category { width: 100%; }
+}
+@container sunny (max-width: 599px) {
+  .site-content .category-bar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) !important;
+    justify-items: center;
+  }
+}
+
+/* Moderner Sammler-Look: bewusst dezenter Feinschliff, Retro-Desktop bleibt. */
+.site-content .category-bar {
+  row-gap: clamp(18px, 2.6vw, 34px);
+  column-gap: clamp(12px, 2.4vw, 38px);
+}
+.site-content .category-bar .main-category-label {
+  line-height: 1.4;
+  letter-spacing: .012em;
+}
+.site-content .category-bar .main-category-caption {
+  gap: 7px;
+}
+.site-content .subcategory {
+  border-radius: 10px;
+  box-shadow: 0 16px 38px rgba(0,0,0,.72), 0 0 12px rgba(255,127,0,.16);
+}
+.site-content .retro-window-title {
+  padding-block: 10px;
+  letter-spacing: .01em;
+}
+.site-content .retro-window-body { padding: 12px; }
+.site-content .subcategory .has-sub { margin-bottom: 8px; }
+.site-content .subcategory .has-sub a {
+  min-height: 48px;
+  padding: 10px 12px;
+  border-radius: 7px;
+  line-height: 1.35;
+  font-weight: 500;
+  transition: background-color .15s ease, color .15s ease, border-color .15s ease;
+}
+.site-content .subcategory .has-sub a:focus-visible {
+  outline: 2px solid #f9f9f9;
+  outline-offset: 2px;
+}
+.site-content .retro-link-icon { flex-shrink: 0; }
+@media (max-width: 599px) {
+  .site-content .category-bar { row-gap: 16px; }
+  .site-content .subcategory .has-sub a { min-height: 48px; }
+}
+@container sunny (max-width: 599px) {
+  .site-content .category-bar { row-gap: 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .site-content .subcategory .has-sub a { transition: none; }
+}
+
 </style>
 </head>
 <body>
 <div class="rgb-aussenrahmen" aria-hidden="true"></div>
+<div class="mobile-scroll-indicator" aria-hidden="true"><div class="mobile-scroll-thumb"></div></div>
 
 <canvas id="stars-canvas"></canvas>
 <canvas id="shooting-stars"></canvas>
 
 <div class="site-content">
 <div class="category-bar">
-    <div class="category"> Gaming / Computer ▼
+    <div class="category"><span class="main-category-label"><span class="main-category-file-icon" aria-hidden="true"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="13" rx="1"/><path d="M8 21h8M12 17v4"/></svg></span><span class="main-category-caption"><span class="main-category-name">Gaming / Computer</span><span class="main-category-arrow" aria-hidden="true"></span></span></span>
         <div class="subcategory">
             <div class="has-sub"><a href="https://www.sunnysschaetze.de/gaming-computer/videospiele" target="_blank">Videospiele</a></div>
             <div class="has-sub"><a href="https://www.sunnysschaetze.de/gaming-computer/konsolen" target="_blank">Konsolen</a></div>
             <div class="has-sub"><a href="https://www.sunnysschaetze.de/gaming-computer/handhelds" target="_blank">Handhelds</a></div>
-            <div class="has-sub hidden"><a href="https://www.sunnysschaetze.de/gaming-computer/pcs-laptops" target="_blank">PCs & Laptops</a></div>
-            <div class="has-sub hidden"><a href="https://www.sunnysschaetze.de/gaming-computer/telekommunikationsger%C3%A4te" target="_blank">Telekommunikationsgeräte</a></div>
-            <div class="has-sub hidden"><a href="https://www.sunnysschaetze.de/gaming-computer/hardware-peripheriegeräte" target="_blank">Hardware & Peripheriegeräte</a></div>
+            <div class="has-sub"><a href="https://www.sunnysschaetze.de/gaming-computer/pcs-laptops" target="_blank">PCs & Laptops</a></div>
+            <div class="has-sub"><a href="https://www.sunnysschaetze.de/gaming-computer/telekommunikationsger%C3%A4te" target="_blank">Telekommunikationsgeräte</a></div>
+            <div class="has-sub"><a href="https://www.sunnysschaetze.de/gaming-computer/hardware-peripheriegeräte" target="_blank">Hardware & Peripheriegeräte</a></div>
         </div>
     </div>
 
-    <div class="category"> Gesellschaftsspiele / Strategiespiele ▼
+    <div class="category"><span class="main-category-label"><span class="main-category-file-icon" aria-hidden="true"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="3"/><circle cx="8" cy="8" r="1"/><circle cx="16" cy="8" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/></svg></span><span class="main-category-caption"><span class="main-category-name">Gesellschaftsspiele / Strategiespiele</span><span class="main-category-arrow" aria-hidden="true"></span></span></span>
         <div class="subcategory">
-            <div class="has-sub hidden"><a href="https://www.sunnysschaetze.de/gesellschaftsspiele-strategiespiele/w%C3%BCrfelspiele-w%C3%BCrfel" target="_blank">Würfelspiele & Würfel</a></div>
+            <div class="has-sub"><a href="https://www.sunnysschaetze.de/gesellschaftsspiele-strategiespiele/w%C3%BCrfelspiele-w%C3%BCrfel" target="_blank">Würfelspiele & Würfel</a></div>
             <div class="has-sub"><a href="https://www.sunnysschaetze.de/gesellschaftsspiele-strategiespiele/kartenspiele-brettspiele" target="_blank">Kartenspiele & Brettspiele</a></div>
-            <div class="has-sub hidden"><a href="https://www.sunnysschaetze.de/gesellschaftsspiele-strategiespiele/tabletop-miniaturen" target="_blank">Tabletop & Miniaturen</a></div>
-            <div class="has-sub hidden"><a href="https://www.sunnysschaetze.de/gesellschaftsspiele-strategiespiele/puzzle-legespiele" target="_blank">Puzzle & Legespiele</a></div>
+            <div class="has-sub"><a href="https://www.sunnysschaetze.de/gesellschaftsspiele-strategiespiele/tabletop-miniaturen" target="_blank">Tabletop & Miniaturen</a></div>
+            <div class="has-sub"><a href="https://www.sunnysschaetze.de/gesellschaftsspiele-strategiespiele/puzzle-legespiele" target="_blank">Puzzle & Legespiele</a></div>
         </div>
     </div>
 
-    <div class="category"> TCG / CCG / LCG / Sticker ▼
+    <div class="category"><span class="main-category-label"><span class="main-category-file-icon" aria-hidden="true"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="3" width="13" height="17" rx="2"/><path d="M6 7 3 8v13h13l3-1"/><path d="m12 8 1.2 2.5 2.8.4-2 2 .5 2.8-2.5-1.3-2.5 1.3.5-2.8-2-2 2.8-.4z"/></svg></span><span class="main-category-caption"><span class="main-category-name">TCG / CCG / LCG / Sticker</span><span class="main-category-arrow" aria-hidden="true"></span></span></span>
         <div class="subcategory">
             <div class="has-sub"><a href="https://www.sunnysschaetze.de/tcg-ccg-lcg-sticker/trading-card-games" target="_blank">Trading Card Games</a></div>
-            <div class="has-sub hidden"><a href="https://www.sunnysschaetze.de/tcg-ccg-lcg-sticker/collectable-card-games" target="_blank">Collectable Card Games</a></div>
-            <div class="has-sub hidden"><a href="https://www.sunnysschaetze.de/tcg-ccg-lcg-sticker/living-card-games" target="_blank">Living Card Games</a></div>
-            <div class="has-sub hidden"><a href="https://www.sunnysschaetze.de/tcg-ccg-lcg-sticker/sticker" target="_blank">Sticker</a></div>
+            <div class="has-sub"><a href="https://www.sunnysschaetze.de/tcg-ccg-lcg-sticker/collectable-card-games" target="_blank">Collectable Card Games</a></div>
+            <div class="has-sub"><a href="https://www.sunnysschaetze.de/tcg-ccg-lcg-sticker/living-card-games" target="_blank">Living Card Games</a></div>
+            <div class="has-sub"><a href="https://www.sunnysschaetze.de/tcg-ccg-lcg-sticker/sticker" target="_blank">Sticker</a></div>
         </div>
     </div>
 
-    <div class="category"> Spielwaren / Figuren ▼
+    <div class="category"><span class="main-category-label"><span class="main-category-file-icon" aria-hidden="true"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M7 21v-4a5 5 0 0 1 10 0v4M5 15l-2 3M19 15l2 3"/></svg></span><span class="main-category-caption"><span class="main-category-name">Spielwaren / Figuren</span><span class="main-category-arrow" aria-hidden="true"></span></span></span>
         <div class="subcategory">
-            <div class="has-sub hidden"><a href="https://www.sunnysschaetze.de/spielwaren-figuren/spielfiguren-actionfiguren" target="_blank">Spielfiguren & Actionfiguren</a></div>
+            <div class="has-sub"><a href="https://www.sunnysschaetze.de/spielwaren-figuren/spielfiguren-actionfiguren" target="_blank">Spielfiguren & Actionfiguren</a></div>
             <div class="has-sub"><a href="https://www.sunnysschaetze.de/spielwaren-figuren/elektronisches-spielzeug-figuren-sammlerst%C3%BCcke" target="_blank">Elektronisches Spielzeug, Figuren & Sammlerstücke</a></div>
             <div class="has-sub"><a href="https://www.sunnysschaetze.de/spielwaren-figuren/pl%C3%BCsch-stofftiere" target="_blank">Plüsch & Stofftiere</a></div>
-            <div class="has-sub hidden"><a href="https://www.sunnysschaetze.de/spielwaren-figuren/klemmbausteine" target="_blank">Klemmbausteine</a></div>
+            <div class="has-sub"><a href="https://www.sunnysschaetze.de/spielwaren-figuren/klemmbausteine" target="_blank">Klemmbausteine</a></div>
             <div class="has-sub"><a href="https://www.sunnysschaetze.de/spielwaren-figuren/schl%C3%BCsselanh%C3%A4nger-handyanh%C3%A4nger" target="_blank">Schlüsselanhänger & Handyanhänger</a></div>
         </div>
     </div>
 </div>
 
 <div class="category-bar">
-    <div class="category"> Druckschriften ▼
+    <div class="category"><span class="main-category-label"><span class="main-category-file-icon" aria-hidden="true"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6c-3-2-6-2-9-1v14c3-1 6-1 9 1 3-2 6-2 9-1V5c-3-1-6-1-9 1zM12 6v14"/></svg></span><span class="main-category-caption"><span class="main-category-name">Druckschriften</span><span class="main-category-arrow" aria-hidden="true"></span></span></span>
         <div class="subcategory">
-            <div class="has-sub hidden"><a href="https://www.sunnysschaetze.de/druckschriften/zeitschriften" target="_blank">Zeitschriften</a></div>
+            <div class="has-sub"><a href="https://www.sunnysschaetze.de/druckschriften/zeitschriften" target="_blank">Zeitschriften</a></div>
             <div class="has-sub"><a href="https://www.sunnysschaetze.de/druckschriften/mangas" target="_blank">Mangas</a></div>
-            <div class="has-sub hidden"><a href="https://www.sunnysschaetze.de/druckschriften/comics" target="_blank">Comics</a></div>
+            <div class="has-sub"><a href="https://www.sunnysschaetze.de/druckschriften/comics" target="_blank">Comics</a></div>
             <div class="has-sub"><a href="https://www.sunnysschaetze.de/druckschriften/b%C3%BCcher" target="_blank">Bücher</a></div>
         </div>
     </div>
 
-    <div class="category"> Visuelle Medien ▼
+    <div class="category"><span class="main-category-label"><span class="main-category-file-icon" aria-hidden="true"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M3 7V4h18v3M8 4l3 3M15 4l3 3"/><path d="m10 10 5 3-5 3z"/></svg></span><span class="main-category-caption"><span class="main-category-name">Visuelle Medien</span><span class="main-category-arrow" aria-hidden="true"></span></span></span>
         <div class="subcategory">
-            <div class="has-sub hidden"><a href="https://www.sunnysschaetze.de/visuelle-medien/fernseher-mediaplayer" target="_blank">Fernseher & Mediaplayer</a></div>
-            <div class="has-sub hidden"><a href="https://www.sunnysschaetze.de/visuelle-medien/animes" target="_blank">Animes</a></div>
-            <div class="has-sub hidden"><a href="https://www.sunnysschaetze.de/visuelle-medien/vhs" target="_blank">VHS</a></div>
+            <div class="has-sub"><a href="https://www.sunnysschaetze.de/visuelle-medien/fernseher-mediaplayer" target="_blank">Fernseher & Mediaplayer</a></div>
+            <div class="has-sub"><a href="https://www.sunnysschaetze.de/visuelle-medien/animes" target="_blank">Animes</a></div>
+            <div class="has-sub"><a href="https://www.sunnysschaetze.de/visuelle-medien/vhs" target="_blank">VHS</a></div>
             <div class="has-sub"><a href="https://www.sunnysschaetze.de/visuelle-medien/dvds" target="_blank">DVDs</a></div>
-            <div class="has-sub hidden"><a href="https://www.sunnysschaetze.de/visuelle-medien/blu-rays" target="_blank">Blu-rays</a></div>
+            <div class="has-sub"><a href="https://www.sunnysschaetze.de/visuelle-medien/blu-rays" target="_blank">Blu-rays</a></div>
         </div>
     </div>
 
-    <div class="category"> Musik ▼
+    <div class="category"><span class="main-category-label"><span class="main-category-file-icon" aria-hidden="true"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13M9 8l12-2"/><ellipse cx="6" cy="18" rx="3" ry="2"/><ellipse cx="18" cy="16" rx="3" ry="2"/></svg></span><span class="main-category-caption"><span class="main-category-name">Musik</span><span class="main-category-arrow" aria-hidden="true"></span></span></span>
         <div class="subcategory">
-            <div class="has-sub hidden"><a href="https://www.sunnysschaetze.de/musik/audioger%C3%A4te" target="_blank">Audiogeräte</a></div>
+            <div class="has-sub"><a href="https://www.sunnysschaetze.de/musik/audioger%C3%A4te" target="_blank">Audiogeräte</a></div>
             <div class="has-sub"><a href="https://www.sunnysschaetze.de/musik/cds" target="_blank">CDs</a></div>
-            <div class="has-sub hidden"><a href="https://www.sunnysschaetze.de/musik/kassetten" target="_blank">Kassetten</a></div>
-            <div class="has-sub hidden"><a href="https://www.sunnysschaetze.de/musik/schallplatten" target="_blank">Schallplatten</a></div>
+            <div class="has-sub"><a href="https://www.sunnysschaetze.de/musik/kassetten" target="_blank">Kassetten</a></div>
+            <div class="has-sub"><a href="https://www.sunnysschaetze.de/musik/schallplatten" target="_blank">Schallplatten</a></div>
         </div>
     </div>
 
-    <div class="category"> Kunst / Sammlergegenstände ▼
+    <div class="category"><span class="main-category-label"><span class="main-category-file-icon" aria-hidden="true"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3h8v4l3 3v9H5v-9l3-3zM8 7h8M5 19h14M3 22h18"/><path d="m12 10 1 2 2 .3-1.5 1.5.4 2.2-1.9-1-1.9 1 .4-2.2L9 12.3l2-.3z"/></svg></span><span class="main-category-caption"><span class="main-category-name">Kunst / Sammlergegenstände</span><span class="main-category-arrow" aria-hidden="true"></span></span></span>
         <div class="subcategory">
             <div class="has-sub"><a href="https://www.sunnysschaetze.de/kunst-sammlergegenst%C3%A4nde/merch-fanartikel" target="_blank">Merch & Fanartikel</a></div>
-            <div class="has-sub hidden"><a href="https://www.sunnysschaetze.de/kunst-sammlergegenst%C3%A4nde/m%C3%BCnzen-geldscheine" target="_blank">Münzen & Geldscheine</a></div>
-            <div class="has-sub hidden"><a href="https://www.sunnysschaetze.de/kunst-sammlergegenst%C3%A4nde/ketten-medaillons" target="_blank">Ketten & Medaillons</a></div>
+            <div class="has-sub"><a href="https://www.sunnysschaetze.de/kunst-sammlergegenst%C3%A4nde/m%C3%BCnzen-geldscheine" target="_blank">Münzen & Geldscheine</a></div>
+            <div class="has-sub"><a href="https://www.sunnysschaetze.de/kunst-sammlergegenst%C3%A4nde/ketten-medaillons" target="_blank">Ketten & Medaillons</a></div>
             <div class="has-sub"><a href="https://www.sunnysschaetze.de/kunst-sammlergegenst%C3%A4nde/geschirr-deko" target="_blank">Geschirr & Deko</a></div>
         </div>
     </div>
@@ -512,8 +1120,19 @@ document.querySelectorAll(".category").forEach(cat => {
         if (e.target.closest("a")) return;
         const sub = cat.querySelector(".subcategory");
         const isShown = sub.classList.contains("show");
-        document.querySelectorAll(".subcategory").forEach(s => s.classList.remove("show"));
-        if(!isShown) sub.classList.add("show");
+        document.querySelectorAll(".subcategory").forEach(s => {
+            s.classList.remove("show", "is-maximized");
+            s.closest(".category")?.classList.remove("has-maximized-window");
+        });
+        if(!isShown) {
+            sub.classList.remove("is-minimized");
+            sub.classList.add("show");
+            cat.classList.remove("is-launching");
+            void cat.offsetWidth; // Animation auch bei erneutem Öffnen starten
+            cat.classList.add("is-launching");
+            clearTimeout(cat._sunnyLaunchTimer);
+            cat._sunnyLaunchTimer = setTimeout(() => cat.classList.remove("is-launching"), 520);
+        }
         e.stopPropagation();
     });
 });
@@ -1343,6 +1962,147 @@ function createExplosionStaub(x, y) {
         duration + 60
     );
 }
+
+/* Sichtbarer Scroll-Fortschritt im Google-Sites-Einbettungsfenster. */
+(() => {
+  const track = document.querySelector('.mobile-scroll-indicator');
+  const thumb = document.querySelector('.mobile-scroll-thumb');
+  if (!track || !thumb) return;
+  function updateScrollIndicator() {
+    const root = document.scrollingElement || document.documentElement;
+    const total = Math.max(root.scrollHeight, document.body.scrollHeight);
+    const visible = window.innerHeight;
+    const distance = Math.max(0, total - visible);
+    track.classList.toggle('is-scrollable', distance > 4);
+    const trackHeight = track.clientHeight;
+    const thumbHeight = Math.min(trackHeight, Math.max(28, trackHeight * visible / Math.max(total, 1)));
+    thumb.style.height = thumbHeight + 'px';
+    thumb.style.transform = 'translateY(' + ((distance ? Math.min(1, Math.max(0, root.scrollTop / distance)) : 0) * Math.max(0, trackHeight - thumbHeight)) + 'px)';
+  }
+  window.addEventListener('scroll', updateScrollIndicator, { passive: true });
+  window.addEventListener('resize', updateScrollIndicator, { passive: true });
+  if ('ResizeObserver' in window) new ResizeObserver(updateScrollIndicator).observe(document.body);
+  updateScrollIndicator();
+  window.addEventListener('load', updateScrollIndicator);
+})();
+</script>
+
+
+<script>
+/* Dropdown-Inhalte als Retro-PC-Fenster aufbereiten; bestehende Links und Effekte bleiben erhalten. */
+document.querySelectorAll('.site-content .category').forEach((category) => {
+  const dropdown = category.querySelector('.subcategory');
+  if (!dropdown || dropdown.querySelector('.retro-window-title')) return;
+  const title = category.querySelector('.main-category-name')?.textContent.trim() || '';
+  const header = document.createElement('div');
+  header.className = 'retro-window-title';
+  const label = document.createElement('span');
+  label.className = 'retro-title-label';
+  // Einheitliche, dunkle Retro-Schatten-Icons statt bunter Emojis.
+  const mainIcons = {
+    'Gaming / Computer': '<rect x="3" y="4" width="18" height="13" rx="1"/><path d="M8 21h8M12 17v4"/>',
+    'Gesellschaftsspiele / Strategiespiele': '<rect x="4" y="4" width="16" height="16" rx="3"/><circle cx="8" cy="8" r="1"/><circle cx="16" cy="8" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/>',
+    'TCG / CCG / LCG / Sticker': '<rect x="6" y="3" width="13" height="17" rx="2"/><path d="M6 7 3 8v13h13l3-1"/><path d="m12 8 1.2 2.5 2.8.4-2 2 .5 2.8-2.5-1.3-2.5 1.3.5-2.8-2-2 2.8-.4z"/>',
+    'Spielwaren / Figuren': '<circle cx="12" cy="8" r="4"/><path d="M7 21v-4a5 5 0 0 1 10 0v4M5 15l-2 3M19 15l2 3"/>',
+    'Druckschriften': '<path d="M12 6c-3-2-6-2-9-1v14c3-1 6-1 9 1 3-2 6-2 9-1V5c-3-1-6-1-9 1zM12 6v14"/>',
+    'Visuelle Medien': '<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M3 7V4h18v3M8 4l3 3M15 4l3 3"/><path d="m10 10 5 3-5 3z"/>',
+    'Musik': '<path d="M9 18V5l12-2v13M9 8l12-2"/><ellipse cx="6" cy="18" rx="3" ry="2"/><ellipse cx="18" cy="16" rx="3" ry="2"/>',
+    'Kunst / Sammlergegenstände': '<path d="M8 3h8v4l3 3v9H5v-9l3-3zM8 7h8M5 19h14M3 22h18"/><path d="m12 10 1 2 2 .3-1.5 1.5.4 2.2-1.9-1-1.9 1 .4-2.2L9 12.3l2-.3z"/>'
+  };
+  const titleIcon = document.createElement('span');
+  titleIcon.className = 'retro-title-icon';
+  titleIcon.setAttribute('aria-hidden', 'true');
+  titleIcon.innerHTML = '<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + (mainIcons[title] || '<path d="m12 2 2 8 8 2-8 2-2 8-2-8-8-2 8-2z"/>') + '</svg>';
+  label.append(titleIcon, document.createTextNode(title));
+  // Einzige Fenstersteuerung: schließen.
+  const controls = document.createElement('div');
+  controls.className = 'retro-window-controls';
+  const closeButton = document.createElement('button');
+  closeButton.type = 'button';
+  closeButton.className = 'retro-window-control retro-window-close';
+  closeButton.textContent = '×';
+  closeButton.title = 'Fenster schließen';
+  closeButton.setAttribute('aria-label', 'Fenster schließen');
+  closeButton.addEventListener('click', (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    if (closeButton.classList.contains('is-closing')) return;
+    closeButton.classList.add('is-closing');
+    window.setTimeout(() => {
+      dropdown.classList.remove('show', 'is-minimized', 'is-maximized');
+      category.classList.remove('has-maximized-window');
+      closeButton.classList.remove('is-closing');
+    }, 190);
+  });
+  controls.append(closeButton);
+  header.append(label, controls);
+  const body = document.createElement('div');
+  body.className = 'retro-window-body';
+  const caption = document.createElement('div');
+  caption.className = 'retro-window-caption';
+  caption.innerHTML = '<span>KATEGORIE AUSWÄHLEN</span>';
+  body.append(caption);
+  // Ein eigenes, thematisch passendes Symbol pro Unterkategorie (ohne Wiederholungen).
+  const iconByCategory = {
+    'Videospiele': '<rect x="3" y="6" width="18" height="12" rx="5"/><path d="M7 12h6M10 9v6M17 10h.01M19 13h.01"/>',
+    'Konsolen': '<path d="M7 4h10v16H7zM12 7v5M9 10h6M10 17h4"/>',
+    'Handhelds': '<rect x="6" y="2" width="12" height="20" rx="3"/><path d="M10 5h4M11 19h2"/>',
+    'PCs & Laptops': '<path d="M5 5h14v11H5zM3 19h18l-2-3H5zM9 8h6M8 12h8"/>',
+    'Telekommunikationsgeräte': '<path d="M7 4c-3 2-3 5-1 8l6 6c3 2 6 2 8-1l-5-4-3 2-4-4 2-3zM16 3q5 2 5 7M16 7q2 1 2 3"/>',
+    'Hardware & Peripheriegeräte': '<rect x="3" y="4" width="18" height="12" rx="1"/><path d="M2 20h20l-2-4H4zM8 8h8"/>',
+    'Würfelspiele & Würfel': '<path d="m12 2 9 5v10l-9 5-9-5V7zM3 7l9 5 9-5M12 12v10"/>',
+    'Kartenspiele & Brettspiele': '<rect x="3" y="3" width="11" height="15" rx="1"/><path d="M7 7l2-2 2 2-2 3zM14 7h7v14H9v-3M17 12h2M17 16h2"/>',
+    'Tabletop & Miniaturen': '<path d="M5 3l14 18M19 3 5 21M3 3l4 1-3 4M21 3l-4 1 3 4M3 21l4-1-3-4M21 21l-4-1 3-4"/>',
+    'Puzzle & Legespiele': '<path d="M4 4h6c-1 3 3 4 4 1V4h6v6c-3-1-4 3-1 4h1v6h-6c1-3-3-4-4-1v1H4v-6c3 1 4-3 1-4H4z"/>',
+    'Trading Card Games': '<rect x="5" y="3" width="13" height="18" rx="1"/><path d="m11.5 7 1.5 3 3 .5-2.2 2.2.5 3.2-2.8-1.5-2.8 1.5.5-3.2L7 10.5l3-.5z"/>',
+    'Collectable Card Games': '<rect x="3" y="6" width="12" height="15" rx="1"/><rect x="7" y="3" width="12" height="15" rx="1"/><path d="M13 7v7M10 10h6"/>',
+    'Living Card Games': '<path d="M4 5h13v16H4zM8 9h5M8 13h5M17 8h3v11h-3M8 17h3"/>',
+    'Sticker': '<path d="M4 3h16v12l-6 6H4zM14 21v-6h6M8 8h8M8 12h4"/>',
+    'Spielfiguren & Actionfiguren': '<path d="m9 3 3-2 3 2 1 4-4 3-4-3zM8 11l-4 4 3 2 3-3M16 11l4 4-3 2-3-3M10 12v5l-3 5h4l1-4 1 4h4l-3-5v-5"/>',
+    'Elektronisches Spielzeug, Figuren & Sammlerstücke': '<rect x="4" y="7" width="16" height="14" rx="2"/><path d="M12 7V3M10 3h4M8 12h.01M16 12h.01M8 17q4 3 8 0"/>',
+    'Plüsch & Stofftiere': '<circle cx="7" cy="6" r="3"/><circle cx="17" cy="6" r="3"/><path d="M6 9a8 8 0 0 0-2 6c0 4 3 7 8 7s8-3 8-7a8 8 0 0 0-2-6M9 14h.01M15 14h.01M10 18q2 2 4 0"/>',
+    'Klemmbausteine': '<rect x="3" y="9" width="18" height="11" rx="1"/><path d="M6 9V5h4v4M14 9V5h4v4M3 15h18"/>',
+    'Schlüsselanhänger & Handyanhänger': '<circle cx="8" cy="7" r="4"/><path d="M8 11v3M8 14l5 5 5-5-5-5zM18 14h3"/>',
+    'Zeitschriften': '<path d="M5 3h15v17H5zM8 6h9v6H8zM8 15h9M8 18h6M3 6v16h15"/>',
+    'Mangas': '<path d="M4 4h16v16H4zM8 10q4-6 8 0M7 14l3 2 2-2 2 2 3-2M8 8h.01M16 8h.01"/>',
+    'Comics': '<path d="M4 5h16v12H9l-5 4v-4zM8 9h3M14 9h2M8 13h8"/>',
+    'Bücher': '<path d="M5 3h14v18H5zM8 3v18M11 7h5M11 11h5M11 15h3M3 6v14"/>',
+    'Fernseher & Mediaplayer': '<rect x="3" y="6" width="18" height="13" rx="2"/><path d="m8 2 4 4 4-4M8 22h8M12 19v3M17 10h.01M17 14h.01"/>',
+    'Animes': '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M6 12q3-4 6 0 3-4 6 0M8 15h.01M16 15h.01M10 18h4"/>',
+    'VHS': '<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8" cy="12" r="2"/><circle cx="16" cy="12" r="2"/><path d="M10 12h4"/>',
+    'DVDs': '<path d="M3 4h18v16H3zM3 9h18M3 16h18M8 12l3-2v4zM15 11h3M15 14h3"/>',
+    'Blu-rays': '<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M5 7h14M8 15q4-7 8 0M9 18h6"/>',
+    'Audiogeräte': '<path d="M4 14V9a8 8 0 0 1 16 0v5M4 13h4v7H4zM16 13h4v7h-4z"/>',
+    'CDs': '<path d="M5 3h14v18H5zM8 6h8v11H8z"/><circle cx="12" cy="11.5" r="3.5"/><circle cx="12" cy="11.5" r=".8"/>',
+    'Kassetten': '<path d="M3 6h18v13H3zM6 9h12v6H6zM6 19l2-3h8l2 3"/><circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/>',
+    'Schallplatten': '<path d="M3 4h18v16H3z"/><circle cx="11" cy="12" r="6"/><circle cx="11" cy="12" r="2"/><path d="M19 6v7l-3 2"/>',
+    'Merch & Fanartikel': '<path d="m8 3 4 3 4-3 5 4-3 4-2-1v11H8V10l-2 1-3-4z"/><path d="m12 10 1 2 2 .3-1.5 1.5.4 2-1.9-1-1.9 1 .4-2L9 12.3l2-.3z"/>',
+    'Münzen & Geldscheine': '<rect x="2" y="5" width="20" height="14" rx="1"/><circle cx="12" cy="12" r="4"/><path d="M5 9h2M17 15h2M12 9v6M10 10h4"/>',
+    'Ketten & Medaillons': '<path d="M6 3c0 6 2 9 6 9s6-3 6-9M12 12v2"/><circle cx="12" cy="18" r="4"/><path d="m12 16 1 2-1 2-1-2z"/>',
+    'Geschirr & Deko': '<path d="M4 7h13v6a6.5 6.5 0 0 1-13 0zM17 9h2a3 3 0 0 1 0 6h-3M3 21h17M9 3v2M13 3v2"/>'
+  };
+  [...dropdown.children].forEach(item => {
+    if (item.classList.contains('has-sub')) {
+      const a = item.querySelector('a');
+      if (a) {
+        const icon = document.createElement('span');
+        icon.className = 'retro-link-icon';
+        icon.setAttribute('aria-hidden','true');
+        icon.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' + (iconByCategory[a.textContent.trim()] || '<path d="m12 3 3 7 7 2-7 3-3 7-3-7-7-3 7-2z"/>') + '</svg>'; 
+        const text = document.createElement('span');
+        text.className = 'retro-link-label';
+        while (a.firstChild) text.append(a.firstChild);
+        const arrow = document.createElement('span');
+        arrow.className = 'retro-link-arrow';
+        arrow.setAttribute('aria-hidden','true');
+        arrow.textContent = '›';
+        a.append(icon, text, arrow);
+      }
+    }
+    body.append(item);
+  });
+  dropdown.append(header, body);
+});
 </script>
 
 </body>
