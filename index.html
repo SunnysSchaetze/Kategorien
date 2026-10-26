@@ -409,33 +409,10 @@ body { width: 100%; }
 }
 /* Der Rahmen bleibt am Rand des Google-Sites-Einbettungsfensters. */
 .rgb-aussenrahmen { position: fixed; inset: 0; }
-
-/* Nur eine sichtbare Scrollanzeige innerhalb des RGB-Außenrahmens.
-   Die Seite bleibt scrollbar, nur die native Leiste wird verborgen. */
-html, body { scrollbar-width: none !important; -ms-overflow-style: none; }
-html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; width: 0; height: 0; }
-.mobile-scroll-indicator { display: none; }
-@media (max-width: 700px), (hover: none) and (pointer: coarse) {
-  .mobile-scroll-indicator {
-    display: block; position: fixed; right: 9px; top: 16px; bottom: 16px;
-    width: 8px; border-radius: 12px; background: rgba(15,15,15,.95);
-    box-shadow: inset 0 0 0 1px rgba(255,153,0,.65);
-    z-index: 210; pointer-events: none; opacity: 0;
-    transition: opacity .2s ease;
-  }
-  .mobile-scroll-indicator.is-scrollable { opacity: 1; }
-  .mobile-scroll-thumb {
-    position: absolute; left: 1px; right: 1px; top: 0;
-    height: 28%; min-height: 28px; border-radius: 12px;
-    background: linear-gradient(180deg, #ffcc33, #ff8a00, #d95700);
-    box-shadow: 0 0 7px rgba(255,153,0,.8);
-  }
-}
 </style>
 </head>
 <body>
 <div class="rgb-aussenrahmen" aria-hidden="true"></div>
-<div class="mobile-scroll-indicator" aria-hidden="true"><div class="mobile-scroll-thumb"></div></div>
 
 <canvas id="stars-canvas"></canvas>
 <canvas id="shooting-stars"></canvas>
@@ -1366,29 +1343,6 @@ function createExplosionStaub(x, y) {
         duration + 60
     );
 }
-
-/* Sichtbarer Scroll-Fortschritt im Google-Sites-Einbettungsfenster. */
-(() => {
-  const track = document.querySelector('.mobile-scroll-indicator');
-  const thumb = document.querySelector('.mobile-scroll-thumb');
-  if (!track || !thumb) return;
-  function updateScrollIndicator() {
-    const root = document.scrollingElement || document.documentElement;
-    const total = Math.max(root.scrollHeight, document.body.scrollHeight);
-    const visible = window.innerHeight;
-    const distance = Math.max(0, total - visible);
-    track.classList.toggle('is-scrollable', distance > 4);
-    const trackHeight = track.clientHeight;
-    const thumbHeight = Math.min(trackHeight, Math.max(28, trackHeight * visible / Math.max(total, 1)));
-    thumb.style.height = thumbHeight + 'px';
-    thumb.style.transform = 'translateY(' + ((distance ? Math.min(1, Math.max(0, root.scrollTop / distance)) : 0) * Math.max(0, trackHeight - thumbHeight)) + 'px)';
-  }
-  window.addEventListener('scroll', updateScrollIndicator, { passive: true });
-  window.addEventListener('resize', updateScrollIndicator, { passive: true });
-  if ('ResizeObserver' in window) new ResizeObserver(updateScrollIndicator).observe(document.body);
-  updateScrollIndicator();
-  window.addEventListener('load', updateScrollIndicator);
-})();
 </script>
 
 </body>
