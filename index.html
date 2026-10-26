@@ -359,6 +359,56 @@ body { width: 100%; }
 @media (prefers-reduced-motion: reduce) {
   .rgb-aussenrahmen { animation: none; }
 }
+
+/* GOOGLE SITES: Layout richtet sich nach der tatsaechlichen Einbettungsbreite,
+   nicht nach der Bildschirmbreite des Besuchers. */
+.site-content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  min-width: 0;
+  container-type: inline-size;
+  container-name: sunny;
+}
+.site-content .category-bar { max-width: 100%; }
+.site-content .category { font-size: clamp(13px, 1.8cqw, 19px); }
+.site-content .subcategory {
+  max-width: min(360px, 90cqw);
+  min-width: 0;
+  max-height: min(340px, 45vh);
+}
+.site-content .category-image video { width: min(850px, 100%); }
+@container sunny (max-width: 900px) {
+  .category-bar { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .category { font-size: clamp(14px, 2.5cqw, 18px); }
+}
+@container sunny (max-width: 599px) {
+  .category-bar { display: flex; flex-direction: column; align-items: stretch; gap: 7px; padding: 12px 16px; }
+  .category { width: 100%; margin: 0; padding: 10px 6px; font-size: 16px; }
+  .subcategory {
+    position: relative; top: auto; left: auto; transform: none;
+    width: 100%; min-width: 0; max-width: 100%;
+    max-height: min(340px, 45vh); margin-top: 8px;
+  }
+  .category-image { margin-top: 24px; }
+  /* Auch bei schmalen Einbettungen auf dem Desktop per Klick aufklappen. */
+  .category:hover .subcategory:not(.show) { display: none; }
+}
+/* Dropdowns bleiben innerhalb der Google-Sites-Einbettungsbreite. */
+.site-content .category-bar .category:last-child > .subcategory {
+  left: auto;
+  right: 0;
+  transform: none;
+}
+/* Auch bei sehr schmalen Einbettungen keine seitlichen Ueberlaeufe. */
+.site-content .subcategory { max-width: min(360px, calc(100cqw - 32px)); }
+@container sunny (max-width: 599px) {
+  .site-content .category-bar .category:last-child > .subcategory {
+    left: auto; right: auto; transform: none;
+  }
+}
+/* Der Rahmen bleibt am Rand des Google-Sites-Einbettungsfensters. */
+.rgb-aussenrahmen { position: fixed; inset: 0; }
 </style>
 </head>
 <body>
@@ -367,6 +417,7 @@ body { width: 100%; }
 <canvas id="stars-canvas"></canvas>
 <canvas id="shooting-stars"></canvas>
 
+<div class="site-content">
 <div class="category-bar">
     <div class="category"> Gaming / Computer ▼
         <div class="subcategory">
@@ -453,6 +504,7 @@ body { width: 100%; }
         Dein Browser unterstützt dieses Animierte Verkaufsbild nicht.
     </video>
 </div>
+</div><!-- Ende site-content -->
 
 <script>
 document.querySelectorAll(".category").forEach(cat => {
@@ -483,6 +535,9 @@ function resizeCanvas(){
 
 resizeCanvas();
 window.addEventListener("resize",resizeCanvas);
+if (typeof ResizeObserver !== "undefined") {
+    new ResizeObserver(resizeCanvas).observe(document.documentElement);
+}
 
 let STAR_COUNT = window.innerWidth < 600
     ? 10 + Math.floor(Math.random()*6)
