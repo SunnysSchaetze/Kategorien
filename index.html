@@ -1016,6 +1016,37 @@ body { background:var(--sunny-black); color:var(--sunny-white); }
   .site-content .subcategory .has-sub a { transition: none; }
 }
 
+
+/* Google Sites: Kategorie-Beschriftung samt Pfeil auf einer Zeile halten. */
+.site-content .category-bar .category:nth-child(2) .main-category-caption {
+  display: inline-flex !important;
+  flex-wrap: nowrap !important;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  width: max-content;
+  max-width: none;
+  white-space: nowrap;
+  font-size: clamp(10px, 1.05vw, 13px);
+}
+.site-content .category-bar .category:nth-child(2) .main-category-name {
+  white-space: nowrap !important;
+  overflow-wrap: normal !important;
+  word-break: normal !important;
+  max-width: none !important;
+}
+.site-content .category-bar .category:nth-child(2) .main-category-arrow { flex: 0 0 17px; }
+/* Unterkategorien vollständig anzeigen, ohne internes Scrollfeld. */
+.site-content .subcategory,
+.site-content .category .subcategory {
+  max-height: none !important;
+  height: auto !important;
+  overflow-y: visible !important;
+  overflow-x: visible !important;
+  overscroll-behavior: auto;
+}
+.site-content .subcategory .retro-window-body { max-height: none !important; overflow: visible !important; }
+
 </style>
 </head>
 <body>
